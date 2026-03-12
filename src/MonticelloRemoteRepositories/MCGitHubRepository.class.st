@@ -137,11 +137,6 @@ MCGitHubRepository >> downloadJSONTags [
 	^ self normalizeTagsData: jsonObject
 ]
 
-{ #category : 'accessing' }
-MCGitHubRepository >> httpsUrl [
-	^ 'https://github.com/', projectPath, '.git'
-]
-
 { #category : 'private' }
 MCGitHubRepository >> normalizeTagsData: jsonObject [
   "return a dictionay mapping the tag name to the commit SHA"
