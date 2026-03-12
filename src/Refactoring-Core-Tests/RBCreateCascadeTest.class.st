@@ -8,7 +8,7 @@ Class {
 { #category : 'tests' }
 RBCreateCascadeTest >> testCombineTwoMessagesIntoCascade [
 
-	| aModel aClass refactoring source firstChar|
+	| aModel aClass refactoring source firstChar |
 
 	aModel := RBNamespace new.
 
