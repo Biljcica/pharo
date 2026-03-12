@@ -42,3 +42,31 @@ RBCreateCascadeTest >> testCombineTwoMessagesIntoCascade [
 		a;
 		b'
 ]
+
+{ #category : 'tests' }
+RBCreateCascadeTest >> testDifferentReceiversShouldFail [
+
+	| aModel aClass refactoring source firstChar|
+	aModel := RBNamespace new.
+
+	aModel defineClass: [ :aBuilder |
+		aBuilder
+			superclass: Object;
+			name: #TestClass;
+			slots: {};
+			package: 'Refactory-Test data' ].
+	aClass := aModel classNamed: #TestClass.
+	
+	aClass compile: 'testMethod
+		obj1 a.
+		obj2 b' classified: 'testing'.
+		
+	source := aClass sourceCodeFor: #testMethod.
+	firstChar := source indexOfSubCollection: 'obj1 a.'.
+	refactoring := RBCreateCascadeRefactoring 
+		combine: (firstChar to: source size)
+		from: #testMethod 
+		in: aClass.
+		
+	self should: [ refactoring execute ] raise: Error 
+]
