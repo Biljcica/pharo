@@ -84,3 +84,41 @@ RBSplitCascadeTest >> testSplitCascadeInAssignment [
 
 
 ]
+
+{ #category : 'tests' }
+RBSplitCascadeTest >> testSplitCascadeInReturn [
+
+	| aModel aClass refactoring  source|
+	
+	aModel := RBNamespace new.
+
+	aModel defineClass: [ :aBuilder |
+		aBuilder
+			superclass: Object;
+			name: #TestClass;
+			slots: {};
+			package: 'Refactory-Test data' ].
+
+	aClass := aModel classNamed: #TestClass.
+	
+	source := 'testMethod
+		^ obj a;
+				b'.
+			
+	aClass compile: source classified: 'testing'.
+	 
+	refactoring := 	RBSplitCascadeRefactoring 
+		split: ((source indexOf: $;) - 1 to: (source indexOf: $;) + 1 )
+		from: #testMethod
+		in: aClass.
+	
+	refactoring execute. 
+	
+	self assert: (aClass sourceCodeFor: #testMethod) equals: 
+	'testMethod
+
+	obj a.
+	^ obj b'
+
+
+]
