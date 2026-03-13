@@ -87,6 +87,35 @@ RBSplitCascadeTest >> testSplitCascadeExtractReceiver [
 ]
 
 { #category : 'tests' }
+RBSplitCascadeTest >> testSplitCascadeFailsWithoutCascade [
+
+	| aModel aClass refactoring |
+	
+	aModel := RBNamespace new.
+
+	aModel defineClass: [ :aBuilder |
+		aBuilder
+			superclass: Object;
+			name: #TestClass;
+			slots: {};
+			package: 'Refactory-Test data' ].
+
+	aClass := aModel classNamed: #TestClass.
+			
+	aClass compile: 'testMethod
+		 obj a' classified: 'testing'.
+	 
+	refactoring := 	RBSplitCascadeRefactoring 
+		split: (1 to: 1)
+		from: #testMethod
+		in: aClass.
+	
+	self should: [ refactoring execute ] raise: RBRefactoringError 
+
+
+]
+
+{ #category : 'tests' }
 RBSplitCascadeTest >> testSplitCascadeInAssignment [
 
 	| aModel aClass refactoring  source|
