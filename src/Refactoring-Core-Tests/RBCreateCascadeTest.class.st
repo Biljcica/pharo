@@ -130,7 +130,7 @@ RBCreateCascadeTest >> testDifferentReceiversShouldFail [
 		from: #testMethod 
 		in: aClass.
 		
-	self should: [ refactoring execute ] raise: Error 
+	self should: [ refactoring execute ] raise: RBRefactoringError 
 ]
 
 { #category : 'tests' }
@@ -157,6 +157,6 @@ RBCreateCascadeTest >> testSingleStatementShouldFail [
 		from: #testMethod
 		in: aClass.
 		
-	self should: [ refactoring execute ] raise: Error 
+	self should: [ refactoring execute ] raise: RBRefactoringError 
 
 ]
