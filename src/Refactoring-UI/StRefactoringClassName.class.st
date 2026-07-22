@@ -64,6 +64,21 @@ StRefactoringClassName >> buildDiffFor: aChange [
 		  rightText: aChange textToDisplay
 ]
 
+{ #category : 'private' }
+StRefactoringClassName >> buttonOk [ 
+	^ buttonOk 
+]
+
+{ #category : 'private' }
+StRefactoringClassName >> buttonOk: aButton [
+	buttonOk := aButton 
+]
+
+{ #category : 'accessing' }
+StRefactoringClassName >> buttonUpdate [
+    ^ buttonUpdate
+]
+
 { #category : 'initialization' }
 StRefactoringClassName >> changesFrom: aCompositeChange [
 
@@ -104,7 +119,17 @@ StRefactoringClassName >> connectPresenters [
 
 	buttonCancel action: [ self closeWindow ].
 	buttonOk action: [ self accept ].
-	buttonUpdate action: [ self updateChangesWithName ].
+	buttonUpdate action: [ 
+		self updateChangesWithName.
+		buttonUpdate disable. ].
+	newNameInput eventHandler
+    whenKeyDownDo: [ :event |
+        event key = KeyboardKey enter ifTrue: [
+				event wasHandled: true.
+            buttonUpdate performAction.
+				self defer: [ buttonOk takeKeyboardFocus ]
+        ]
+    ]
 ]
 
 { #category : 'api - focus' }
@@ -170,14 +195,18 @@ StRefactoringClassName >> globalActiveScope [
 
 { #category : 'initialization' }
 StRefactoringClassName >> initializeDialogWindow: aDialogWindowPresenter [
-	"Used to initialize the model in the case of the use into a dialog window.
-	 Override this to set buttons other than the default (Ok, Cancel)."
+
+	| applyButton |
 	
 	aDialogWindowPresenter
-		addButton: 'Cancel' do: [ :presenter | presenter close ];
+		addButton: 'Cancel' do: [ :presenter | presenter close ].
+
+	applyButton := aDialogWindowPresenter
 		addDefaultButton: 'Apply' do: [ :presenter | 
 			self accept.
-			presenter close ]
+			presenter close ].
+
+	self buttonOk: applyButton
 ]
 
 { #category : 'initialization' }
@@ -367,6 +396,11 @@ StRefactoringClassName >> validateName: aString [
 		 buttonUpdate disable .
 		].
 	
+]
+
+{ #category : 'accessing' }
+StRefactoringClassName >> validationLabel [
+	^ validationLabel 
 ]
 
 { #category : 'accessing' }
